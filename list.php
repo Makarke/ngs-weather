@@ -55,7 +55,7 @@
 			if(isset($_POST['del'])){
 				foreach($_POST['del'] as $index => $var){
 					if($index == $i){
-						$city_col->remove(array('cityalias' => $city_doc['cityalias']));
+						$city_col->remove(array('_id' => new MongoId($city_doc['_id'])));
 					}
 				}
 			}
@@ -68,7 +68,7 @@
 							$newdata = array('$set' => 
 							array("cityalias" => $_POST['textalias'],
 								"cityname" => $_POST['texttitle']));
-							$city_col->update(array('cityalias' => $city_doc['cityalias']),$newdata);
+							$city_col->update(array('_id' => new MongoId($city_doc['_id'])),$newdata);
 						}
 					}
 				}
