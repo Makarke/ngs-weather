@@ -12,7 +12,7 @@
 	foreach ($cursor as $doc) {
 		/* Обновление архива всех избранных городов */
 		$weather = getWeatherInCity($doc['cityalias']);
-		$today = date("Y-m-d H:i:s");									//Получение текущей даты
+		$today = date("Y-m-d H:i:s");			//Получение текущей даты
 		$person = array("updtime" => $today,
 			"cityid" => $doc['_id'],
 			"temperature" => $weather['temperature'],
