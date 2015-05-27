@@ -35,7 +35,7 @@
 		Давление:'.$weather['pressure'].'мм рт.ст. 
 		Влажность:'.$weather['humidity'].'%</div>';						//Вывод информации
 	
-	echo '<form action="chat.php" method="post">
+	echo '<form action="list.php" method="post">
 			<button type="submit" name="add">Добавить город</button>
 			<select name="citieslist">';								//Создание формы для добавления города в список
 	$collection = $db->getCollection('cities');
