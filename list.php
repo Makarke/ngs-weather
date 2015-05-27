@@ -1,54 +1,54 @@
 <?php
-	error_reporting(E_ALL); 											//Вывод ошибок
-	session_start(); 													//Запуск сессии
+	error_reporting(E_ALL); 								//Вывод ошибок
+	session_start(); 									//Запуск сессии
 	header("Content-Type: text/html; charset=utf-8"); 					//Установка кодировки
-	echo '<link rel="stylesheet" type="text/css" href="style.css" />';	//Подключение css
+	echo '<link rel="stylesheet" type="text/css" href="style.css" />';			//Подключение css
 
 	include 'db.php';
 	include 'func.php';
 	
-	$db = new DB('localhost','test');									//Инициализация класса базы данных
-	$collection = $db->getCollection('cities');							//Выбор коллекции
-	if($db->isCollectionEmpty($collection)) {							//Проверка на пустоту коллекции
-		insertCitiesList($collection);									//Заполнение коллекции списком городов
+	$db = new DB('localhost','test');							//Инициализация класса базы данных
+	$collection = $db->getCollection('cities');						//Выбор коллекции
+	if($db->isCollectionEmpty($collection)) {						//Проверка на пустоту коллекции
+		insertCitiesList($collection);							//Заполнение коллекции списком городов
 	}
 
 	if(!isset($_SESSION['lastcity']) || !isset($_SESSION['lasttitle'])) {	
 		$city_cursor = $collection->find()->limit(1);					//Выборка первого города
 		foreach ($city_cursor as $city_doc) {	
-			$_SESSION['lastcity']=$city_doc['alias'];					//Занесение полученных данных в сессию
+			$_SESSION['lastcity']=$city_doc['alias'];				//Занесение полученных данных в сессию
 			$_SESSION['lasttitle']=$city_doc['title'];
 		}
 	}
 
 	if(isset($_POST['add'])) {													
-		$city_cursor = $collection->findOne(array('alias' => $_POST['citieslist']));//Выборка города по его алиасу
+		$city_cursor = $collection->findOne(array('alias' => $_POST['citieslist']));	//Выборка города по его алиасу
 		$fav_col = $db->getCollection('mycity');						
 		$city = array("cityname" => $city_cursor['title'], 
-			"cityalias" => $city_cursor['alias']);						//Условия для выборки "избранных" городов
-		$fav_col->insert($city);										//Вставка в базу данных
+			"cityalias" => $city_cursor['alias']);					//Условия для выборки "избранных" городов
+		$fav_col->insert($city);							//Вставка в базу данных
 	}
 	$weather = getWeatherInCity($_SESSION['lastcity']);					//Получение массива с погодой
 	echo '<div id="content"><div id="top">	
 		'.$_SESSION['lasttitle'].'<br>
 		Температура:'.$weather['temperature'].'&degС 
 		Давление:'.$weather['pressure'].'мм рт.ст. 
-		Влажность:'.$weather['humidity'].'%</div>';						//Вывод информации
+		Влажность:'.$weather['humidity'].'%</div>';					//Вывод информации
 	
 	echo '<form action="list.php" method="post">
 			<button type="submit" name="add">Добавить город</button>
-			<select name="citieslist">';								//Создание формы для добавления города в список
+			<select name="citieslist">';						//Создание формы для добавления города в список
 	$collection = $db->getCollection('cities');
-	$cursor = $collection->find(array(),array('title','alias'));		//Выборка только 2х столбцов
+	$cursor = $collection->find(array(),array('title','alias'));				//Выборка только 2х столбцов
 	foreach ($cursor as $doc) {
-		echo '<option value='.$doc['alias'].'>'.$doc['title'].'</option>';//Вывод списка городов
+		echo '<option value='.$doc['alias'].'>'.$doc['title'].'</option>';		//Вывод списка городов
 	}
 	echo '</select>';
 	
 	if(isset($_POST['del']) || isset($_POST['save']))
 	{
 		$city_col = $db->getCollection('mycity');							
-		$city_cursor = $city_col->find();								//Выборка избранных городов
+		$city_cursor = $city_col->find();						//Выборка избранных городов
 		$i=1;
 		foreach ($city_cursor as $city_doc) {	
 			/* Удаление города из списка по его id */
