@@ -1,0 +1,15 @@
+#content { 
+	background: #fff;
+    width:  80%; 
+	margin: 0 auto;
+}
+#top { 
+	background: #fff;
+	border:1px solid;
+    width:  100%; 
+	margin: 0 auto;
+}
+#cities{ 
+	top-border:1px solid;
+    width:  100%; 
+}
