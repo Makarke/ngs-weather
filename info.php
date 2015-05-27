@@ -9,18 +9,18 @@
 	include 'func.php';
 	$db = new DB('localhost','test');
 	
-	define('FOR_DAYS',3);															//Константа для указания размера архива погоды
+	define('FOR_DAYS',3);									//Константа для указания размера архива погоды
 	$_SESSION['id'] = $_GET['id'];													
 	$collection = $db->getCollection('mycity');
 	if(!$db->isCollectionEmpty($collection)) {
 		$cursor = $collection->find(array('_id' => new MongoId($_SESSION['id'])));	//Выбор нужного города по id
 		foreach ($cursor as $city_doc) {
-			$_SESSION['lasttitle'] = $city_doc['cityname'];							//Сохранение последнего выбранного города
+			$_SESSION['lasttitle'] = $city_doc['cityname'];				//Сохранение последнего выбранного города
 			$_SESSION['lastcity'] = $city_doc['cityalias'];
 		}			
 	}
-	$weather = getWeatherInCity($_SESSION['lastcity']);								//Получение текущей погоды
-	$forecast = getForecastInCity($_SESSION['lastcity'],FOR_DAYS);					//Получение прогноза погоды
+	$weather = getWeatherInCity($_SESSION['lastcity']);					//Получение текущей погоды
+	$forecast = getForecastInCity($_SESSION['lastcity'],FOR_DAYS);				//Получение прогноза погоды
 	echo '<div id="content"><div id="top">
 		'.$_SESSION['lasttitle'].'<br> 
 		Температура:'.$weather['temperature'].'&degС 
@@ -40,7 +40,7 @@
 				/* Вывод прогноза погоды */
 				for($i=0;$i<FOR_DAYS;$i++)
 				{
-					$date = date('d.m.Y', strtotime($forecast[$i]['date']));		//Изменение формата даты
+					$date = date('d.m.Y', strtotime($forecast[$i]['date']));//Изменение формата даты
 					echo '<tr>
 						<td>'.$date.'</td>
 						<td>'.$forecast[$i]['temperature'].'&degС</td>
@@ -60,8 +60,8 @@
 				$archive_col = $db->getCollection('archive');
 				if(!$db->isCollectionEmpty($archive_col)) {
 					$cursor = $archive_col->find(array('cityid' => new MongoId($_SESSION['id'])));
-					$cursor->sort(array('_id' => -1));									//Обратная сортировка
-					$cursor->limit(3);													//Выборка последних 3 записей из архива
+					$cursor->sort(array('_id' => -1));					//Обратная сортировка
+					$cursor->limit(3);							//Выборка последних 3 записей из архива
 					foreach ($cursor as $city_doc) {
 						echo '<tr>
 							<td>'.$city_doc['updtime'].'</td>
