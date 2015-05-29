@@ -13,11 +13,11 @@
 		/* Обновление архива всех избранных городов */
 		$weather = getWeatherInCity($doc['cityalias']);
 		$today = date("Y-m-d H:i:s");			//Получение текущей даты
-		$person = array("updtime" => $today,
+		$update = array("updtime" => $today,
 			"cityid" => $doc['_id'],
 			"temperature" => $weather['temperature'],
 			"humidity" => $weather['humidity']);
-		$collection->insert($person);
+		$collection->insert($update);
 	}
 	$db->close();
 ?>
